@@ -57,13 +57,52 @@ jobs:
         if: always()
         run: |
           if [ -f status.json ]; then
-            {
-              echo "## Status do monitor SENAC"
-              echo
-              echo '```json'
-              cat status.json
-              echo '```'
-            } >> "$GITHUB_STEP_SUMMARY"
+            python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json
+          from datetime import datetime
+
+          with open("status.json", "r", encoding="utf-8") as f:
+              status = json.load(f)
+
+          local = status.get("finished_at_local") or status.get("started_at_local")
+          utc = status.get("finished_at_utc") or status.get("started_at_utc")
+
+          def format_local(value):
+              if not value:
+                  return "—"
+              return datetime.fromisoformat(value).strftime("%d/%m/%Y %H:%M:%S") + " (GMT-3)"
+
+          def format_utc(value):
+              if not value:
+                  return "—"
+              return datetime.fromisoformat(value).strftime("%d/%m/%Y %H:%M:%S") + " UTC"
+
+          print("## Execução do Monitor SENAC")
+          print()
+          print(f"🕒 **Horário local:** {format_local(local)}")
+          print()
+          print(f"🌍 **Horário UTC:** {format_utc(utc)}")
+          print()
+          print(f"📍 **Fuso:** {status.get('timezone', 'America/Fortaleza')}")
+          print()
+          print(f"✅ **Sucesso:** {status.get('success')}")
+          print()
+          print(f"📄 **PDFs encontrados:** {status.get('pdfs_found', 0)}")
+          print()
+          print(f"🆕 **PDFs novos:** {status.get('new_pdfs', 0)}")
+          print()
+          print(f"🎯 **Matches:** {status.get('matches', 0)}")
+          print()
+          print(f"📲 **ntfy enviados:** {status.get('ntfy_sent', 0)}")
+          print()
+          print("### Dados técnicos")
+          print()
+          print("```json")
+          print(json.dumps(status, ensure_ascii=False, indent=2))
+          print("```")
+          PY
+          else
+            echo "status.json não foi gerado." >> "$GITHUB_STEP_SUMMARY"
           fi
 
       - name: Garantir diretório do dashboard
