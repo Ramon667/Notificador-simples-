@@ -66,6 +66,37 @@ jobs:
             } >> "$GITHUB_STEP_SUMMARY"
           fi
 
+      - name: Garantir diretório do dashboard
+        if: always()
+        run: |
+          mkdir -p docs
+          if [ ! -f docs/index.html ]; then
+            cat > docs/index.html <<'HTML'
+          <!doctype html>
+          <html lang="pt-BR">
+          <head>
+            <meta charset="utf-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+            <title>Monitor SENAC PI</title>
+          </head>
+          <body>
+            <h1>Monitor SENAC PI</h1>
+            <p>O dashboard ainda não foi gerado nesta execução.</p>
+          </body>
+          </html>
+          HTML
+          fi
+
+      - name: Configurar GitHub Pages
+        if: always()
+        uses: actions/configure-pages@v5
+
+      - name: Enviar artefato do dashboard
+        if: always()
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
       - name: Salvar estado, histórico e dashboard
         if: always()
         env:
@@ -74,7 +105,6 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
 
-          # Adiciona somente os arquivos que realmente existem.
           for file in seen.json status.json history.json docs/index.html; do
             if [ -e "$file" ]; then
               git add "$file"
@@ -101,17 +131,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Checkout atualizado
-        uses: actions/checkout@v4
-
-      - name: Configurar Pages
-        uses: actions/configure-pages@v5
-
-      - name: Enviar artefato do dashboard
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: docs
-
       - name: Publicar GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
