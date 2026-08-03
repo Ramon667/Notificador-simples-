@@ -2,20 +2,21 @@ name: Monitorar vagas Senac PI
 
 on:
   schedule:
-    # Roda a cada 30 minutos.
-    - cron: "*/30 * * * *"
+    # A cada 30 minutos, evitando o minuto 00 (horário de maior carga).
+    - cron: "7,37 * * * *"
   workflow_dispatch: {}
 
 permissions:
   contents: write
 
 concurrency:
-  group: senac-monitor
+  group: senac-monitor-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
   check:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout do repositório
@@ -27,6 +28,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
 
       - name: Instalar dependências do sistema (OCR)
         run: |
@@ -36,28 +38,52 @@ jobs:
       - name: Instalar dependências Python
         run: pip install -r requirements.txt
 
+      - name: Validar sintaxe
+        run: python -m py_compile monitor.py
+
+      - name: Executar testes
+        run: python -m unittest discover -s tests -v
+
       - name: Rodar monitor
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          NTFY_SERVER: https://ntfy.sh
           CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
           CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
-          KEYWORD: "enfermagem"
+          KEYWORD: enfermagem
         run: python monitor.py
 
-      - name: Salvar estado (seen.json) de volta no repositório
+      - name: Publicar resumo no GitHub Actions
+        if: always()
+        run: |
+          if [ -f status.json ]; then
+            {
+              echo "## Status do monitor SENAC"
+              echo
+              echo '```json'
+              cat status.json
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "status.json não foi gerado." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Salvar seen.json e status.json
+        if: always()
+        env:
+          BRANCH_NAME: ${{ github.ref_name }}
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
 
-          git add seen.json
+          git add seen.json status.json
 
           if git diff --staged --quiet; then
-            echo "Nenhuma alteração no seen.json."
+            echo "Nenhuma alteração de estado para salvar."
             exit 0
           fi
 
-          git commit -m "Atualiza estado de editais vistos"
+          git commit -m "Atualiza estado do monitor SENAC"
 
-          git pull --rebase origin main
-          git push origin HEAD:main
-          
+          git pull --rebase origin "$BRANCH_NAME"
+          git push origin "HEAD:$BRANCH_NAME"
