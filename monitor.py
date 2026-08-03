@@ -12,6 +12,7 @@ import sys
 import tempfile
 import unicodedata
 from datetime import datetime, timezone
+from zoneinfo import ZoneInfo
 from pathlib import Path
 from typing import Any
 from urllib.parse import urljoin, urlparse
@@ -37,6 +38,8 @@ CALLMEBOT_APIKEY = os.environ.get("CALLMEBOT_APIKEY", "").strip()
 
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; SenacVagasMonitor/2.0)"}
 SENAC_HOST = urlparse(VAGAS_URL).hostname
+LOCAL_TZ_NAME = "America/Fortaleza"
+LOCAL_TZ = ZoneInfo(LOCAL_TZ_NAME)
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -45,8 +48,33 @@ def log(symbol: str, message: str) -> None:
     print(f"{symbol} {message}")
 
 
+def utc_now() -> datetime:
+    return datetime.now(timezone.utc)
+
+
 def utc_now_iso() -> str:
-    return datetime.now(timezone.utc).isoformat(timespec="seconds")
+    return utc_now().isoformat(timespec="seconds")
+
+
+def local_now_iso() -> str:
+    return utc_now().astimezone(LOCAL_TZ).isoformat(timespec="seconds")
+
+
+def local_display(iso_value: str | None) -> str:
+    if not iso_value:
+        return "—"
+    parsed = datetime.fromisoformat(iso_value)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(LOCAL_TZ).strftime("%d/%m/%Y %H:%M:%S") + " (GMT-3)"
+
+
+def print_time_header(started_at_utc: str, started_at_local: str) -> None:
+    print("=" * 64)
+    print(f"🕒 Horário local: {local_display(started_at_local)}")
+    print(f"🌍 Horário UTC:   {datetime.fromisoformat(started_at_utc).strftime('%d/%m/%Y %H:%M:%S')} UTC")
+    print(f"📍 Fuso:          {LOCAL_TZ_NAME}")
+    print("=" * 64)
 
 
 def load_json(path: Path, default: Any) -> Any:
@@ -342,7 +370,7 @@ def generate_dashboard(status: dict[str, Any], history: list[dict[str, Any]], co
         categories = ", ".join(item.get("matched_groups", [])) or "—"
         rows.append(
             "<tr>"
-            f"<td>{html.escape(item.get('detected_at', ''))}</td>"
+            f"<td>{html.escape(local_display(item.get('detected_at_local') or item.get('detected_at_utc')))}</td>"
             f"<td>{html.escape(item.get('title', ''))}</td>"
             f"<td>{html.escape(categories)}</td>"
             f"<td>{'Sim' if item.get('ntfy_sent') else 'Não'}</td>"
@@ -367,7 +395,7 @@ h1{{margin-bottom:6px}} small{{color:#555}}
 </head>
 <body>
 <h1>{html.escape(config.get('dashboard', {}).get('title', 'Monitor SENAC PI'))}</h1>
-<small>Última atualização: {html.escape(str(status.get('finished_at')))}</small>
+<small>Última atualização: {html.escape(local_display(status.get('finished_at_local') or status.get('finished_at_utc')))}</small>
 <div class="cards">
 <div class="card"><b>Sucesso</b><br>{status.get('success')}</div>
 <div class="card"><b>PDFs encontrados</b><br>{status.get('pdfs_found')}</div>
@@ -390,8 +418,11 @@ def print_summary(status: dict[str, Any]) -> None:
     print("\n" + "=" * 56)
     print("RESUMO DA EXECUÇÃO")
     for label, key in (
-        ("Início UTC", "started_at"),
-        ("Fim UTC", "finished_at"),
+        ("Início local", "started_at_local"),
+        ("Fim local", "finished_at_local"),
+        ("Fuso", "timezone"),
+        ("Início UTC", "started_at_utc"),
+        ("Fim UTC", "finished_at_utc"),
         ("Sucesso", "success"),
         ("PDFs encontrados", "pdfs_found"),
         ("PDFs novos", "new_pdfs"),
@@ -410,8 +441,11 @@ def main() -> int:
     seen = load_json(SEEN_FILE, {})
     history = load_json(HISTORY_FILE, [])
     status = {
-        "started_at": utc_now_iso(),
-        "finished_at": None,
+        "started_at_utc": utc_now_iso(),
+        "started_at_local": local_now_iso(),
+        "timezone": LOCAL_TZ_NAME,
+        "finished_at_utc": None,
+        "finished_at_local": None,
         "success": False,
         "pdfs_found": 0,
         "new_pdfs": 0,
@@ -424,6 +458,7 @@ def main() -> int:
     }
 
     try:
+        print_time_header(status["started_at_utc"], status["started_at_local"])
         log("🔵", f"Verificando {VAGAS_URL}")
         links = fetch_pdf_links()
         status["pdfs_found"] = len(links)
@@ -486,10 +521,12 @@ def main() -> int:
                 "ntfy_sent": ntfy_sent,
                 "whatsapp_sent": whatsapp_sent,
                 "used_ocr": analysis.get("used_ocr", False),
-                "processed_at": processed_at,
+                "processed_at_utc": processed_at,
+                "processed_at_local": datetime.fromisoformat(processed_at).astimezone(LOCAL_TZ).isoformat(timespec="seconds"),
             }
             append_history(history, {
-                "detected_at": processed_at,
+                "detected_at_utc": processed_at,
+                "detected_at_local": datetime.fromisoformat(processed_at).astimezone(LOCAL_TZ).isoformat(timespec="seconds"),
                 "title": title,
                 "url": url,
                 "matched": matched,
@@ -510,7 +547,8 @@ def main() -> int:
         log("🔴", status["last_error"])
         code = 1
     finally:
-        status["finished_at"] = utc_now_iso()
+        status["finished_at_utc"] = utc_now_iso()
+        status["finished_at_local"] = local_now_iso()
         atomic_save_json(STATUS_FILE, status)
         generate_dashboard(status, history, config)
         print_summary(status)

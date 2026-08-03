@@ -69,3 +69,21 @@ Em **Settings → Secrets and variables → Actions**:
 - `NTFY_TOPIC`;
 - `CALLMEBOT_PHONE` opcional;
 - `CALLMEBOT_APIKEY` opcional.
+
+
+## Fuso horário
+
+O projeto registra UTC e o horário local `America/Fortaleza` (GMT-3).
+O dashboard, `status.json`, `history.json`, `seen.json` e o resumo dos logs
+exibem o horário local de Teresina. Os logs nativos do GitHub Actions continuam em UTC.
+
+
+## Cabeçalho de horário nos logs
+
+Cada execução mostra no início:
+
+- horário local de Teresina;
+- horário UTC;
+- fuso `America/Fortaleza`.
+
+O Job Summary também destaca essas informações antes dos dados técnicos.
