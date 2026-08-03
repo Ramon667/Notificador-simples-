@@ -43,7 +43,7 @@ jobs:
         run: python -m py_compile monitor.py
 
       - name: Executar testes
-        run: python -m unittest discover -s tests -p "test_*.py" -t . -v
+        run: python tests/test_monitor.py -v
 
       - name: Rodar monitor
         env:
@@ -73,7 +73,15 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add seen.json status.json history.json docs/index.html
+
+          # Adiciona somente os arquivos que realmente existem.
+          for file in seen.json status.json history.json docs/index.html; do
+            if [ -e "$file" ]; then
+              git add "$file"
+            else
+              echo "Arquivo ainda não gerado: $file"
+            fi
+          done
 
           if git diff --staged --quiet; then
             echo "Nenhuma alteração para salvar."
