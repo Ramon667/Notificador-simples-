@@ -2,12 +2,13 @@ name: Monitorar vagas Senac PI
 
 on:
   schedule:
-    # A cada 30 minutos, evitando o minuto 00 (horário de maior carga).
     - cron: "7,37 * * * *"
   workflow_dispatch: {}
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: senac-monitor-${{ github.ref }}
@@ -19,7 +20,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - name: Checkout do repositório
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -30,19 +31,19 @@ jobs:
           python-version: "3.11"
           cache: pip
 
-      - name: Instalar dependências do sistema (OCR)
+      - name: Instalar OCR
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq tesseract-ocr tesseract-ocr-por poppler-utils
 
-      - name: Instalar dependências Python
+      - name: Instalar dependências
         run: pip install -r requirements.txt
 
       - name: Validar sintaxe
         run: python -m py_compile monitor.py
 
       - name: Executar testes
-        run: python -m unittest discover -s tests -v
+        run: python -m unittest discover -s tests -p "test_*.py" -t . -v
 
       - name: Rodar monitor
         env:
@@ -50,10 +51,9 @@ jobs:
           NTFY_SERVER: https://ntfy.sh
           CALLMEBOT_PHONE: ${{ secrets.CALLMEBOT_PHONE }}
           CALLMEBOT_APIKEY: ${{ secrets.CALLMEBOT_APIKEY }}
-          KEYWORD: enfermagem
         run: python monitor.py
 
-      - name: Publicar resumo no GitHub Actions
+      - name: Publicar resumo
         if: always()
         run: |
           if [ -f status.json ]; then
@@ -64,26 +64,46 @@ jobs:
               cat status.json
               echo '```'
             } >> "$GITHUB_STEP_SUMMARY"
-          else
-            echo "status.json não foi gerado." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Salvar seen.json e status.json
+      - name: Salvar estado, histórico e dashboard
         if: always()
         env:
           BRANCH_NAME: ${{ github.ref_name }}
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-
-          git add seen.json status.json
+          git add seen.json status.json history.json docs/index.html
 
           if git diff --staged --quiet; then
-            echo "Nenhuma alteração de estado para salvar."
+            echo "Nenhuma alteração para salvar."
             exit 0
           fi
 
-          git commit -m "Atualiza estado do monitor SENAC"
-
+          git commit -m "Atualiza monitor SENAC"
           git pull --rebase origin "$BRANCH_NAME"
           git push origin "HEAD:$BRANCH_NAME"
+
+  deploy-pages:
+    needs: check
+    if: always()
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout atualizado
+        uses: actions/checkout@v4
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar artefato do dashboard
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+
+      - name: Publicar GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
