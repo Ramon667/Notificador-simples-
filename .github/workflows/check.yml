@@ -43,7 +43,7 @@ jobs:
         run: python -m py_compile monitor.py
 
       - name: Executar testes
-        run: python tests/test_monitor.py -v
+        run: python test_monitor.py -v
 
       - name: Rodar monitor
         env:
