@@ -46,5 +46,17 @@
     "matched": false,
     "ntfy_sent": false,
     "whatsapp_sent": false
+  },
+  "https://psg.pi.senac.br/media/pdf/vaga/EDITAL_COMPLEMENTAR_N%C2%BA_05_AO_EDITAL_N%C2%BA_003-2026_-_PSG.pdf": {
+    "title": "EDITAL COMPLEMENTAR Nº 05 AO EDITAL Nº 003-2026 - PSG",
+    "matched": true,
+    "matched_groups": [
+      "Técnico em Enfermagem"
+    ],
+    "ntfy_sent": true,
+    "whatsapp_sent": false,
+    "used_ocr": false,
+    "processed_at_utc": "2026-08-03T18:37:38+00:00",
+    "processed_at_local": "2026-08-03T15:37:38-03:00"
   }
 }
