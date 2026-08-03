@@ -46,12 +46,5 @@
     "matched": false,
     "ntfy_sent": false,
     "whatsapp_sent": false
-  },
-  "https://psg.pi.senac.br/media/pdf/vaga/EDITAL_COMPLEMENTAR_N%C2%BA_05_AO_EDITAL_N%C2%BA_003-2026_-_PSG.pdf": {
-    "title": "EDITAL COMPLEMENTAR Nº 05 AO EDITAL Nº 003-2026 - PSG",
-    "matched": true,
-    "ntfy_sent": true,
-    "whatsapp_sent": false,
-    "processed_at": "2026-08-03T16:36:15+00:00"
   }
 }

@@ -1,66 +1,71 @@
-# Monitor de vagas do Senac PSG Piauí — v1.1
+# Monitor SENAC PI — v2.0
 
-Monitora a página de vagas do Senac Piauí, analisa PDFs novos e envia uma
-notificação quando encontra a palavra-chave configurada, por padrão
-`enfermagem`.
+## O que monitora
+
+O monitor procura grupos de cursos definidos em `config.json`.
+
+### Grupo Técnico em Enfermagem
+
+Inclui termos como:
+
+- técnico em enfermagem;
+- técnico de enfermagem;
+- curso técnico de enfermagem;
+- formação técnica em enfermagem;
+- enfermagem flexível;
+- enfermagem.
+
+### Grupo Redes
+
+Inclui termos como:
+
+- administrador de redes;
+- administração de redes;
+- redes de computadores;
+- técnico em redes de computadores;
+- infraestrutura de redes;
+- suporte e manutenção de redes;
+- cabeamento estruturado;
+- configuração, gestão e segurança de redes;
+- redes sem fio e networking.
+
+A correspondência aceita acentos, quebras de linha, hífens e pequenas variações
+de escrita. Os termos podem ser ampliados diretamente em `config.json`.
 
 ## Recursos
 
-- execução automática pelo GitHub Actions a cada 30 minutos;
-- extração de tabelas com `pdfplumber`;
-- OCR com Tesseract para PDFs digitalizados;
-- ntfy como canal principal;
-- CallMeBot/WhatsApp como canal opcional;
-- retry automático para falhas temporárias de rede;
-- `seen.json` para impedir notificações duplicadas;
-- `status.json` com o resultado da última execução;
-- resumo na página da execução do GitHub Actions;
-- testes automáticos antes de cada monitoramento.
+- múltiplos grupos de cursos;
+- correspondência exata e aproximada;
+- ntfy e WhatsApp já existentes;
+- histórico em `history.json`;
+- painel HTML em `docs/index.html`;
+- GitHub Pages;
+- OCR somente quando o PDF não possui texto útil;
+- retries de rede;
+- logs com símbolos;
+- testes automatizados;
+- `seen.json` para evitar duplicidade;
+- `status.json` para a última execução.
 
-## Estrutura
+## GitHub Pages
 
-```text
-.github/workflows/check.yml
-tests/test_monitor.py
-monitor.py
-requirements.txt
-seen.json
-status.json
-```
+Depois de enviar os arquivos:
+
+1. Abra **Settings → Pages**.
+2. Em **Build and deployment**, selecione **GitHub Actions**.
+3. Execute o workflow manualmente uma vez.
+4. O job `deploy-pages` publicará o painel.
+
+## Configuração
+
+Edite `config.json` para adicionar ou remover nomes de cursos.
+
+Não há filtro por cidade nesta versão.
 
 ## Secrets
 
-Em **Settings → Secrets and variables → Actions**, crie:
+Em **Settings → Secrets and variables → Actions**:
 
-- `NTFY_TOPIC`: somente o nome do tópico, por exemplo
-  `senac-pi-enfermagem-a37xk9`;
-- `CALLMEBOT_PHONE`: opcional;
-- `CALLMEBOT_APIKEY`: opcional.
-
-Nunca coloque esses valores diretamente nos arquivos.
-
-## Como testar
-
-Abra **Actions → Monitorar vagas Senac PI → Run workflow**.
-
-A execução valida a sintaxe, roda os testes, executa o monitor, atualiza
-`seen.json` e `status.json`, e publica um resumo na tela da execução.
-
-## Como confirmar a automação
-
-Na lista de execuções:
-
-- `workflow_dispatch` significa execução manual;
-- `schedule` significa execução automática.
-
-O cron usa os minutos 7 e 37 de cada hora para reduzir atrasos comuns no
-início da hora.
-
-## Observações
-
-O portal do Senac está com certificado HTTPS expirado. A validação TLS é
-desativada somente para o domínio `psg.pi.senac.br`; ntfy, CallMeBot e
-outros domínios continuam com validação normal.
-
-O ntfy é o canal obrigatório para considerar um edital notificado. Se o
-ntfy falhar, o edital não é salvo como concluído e será tentado novamente.
+- `NTFY_TOPIC`;
+- `CALLMEBOT_PHONE` opcional;
+- `CALLMEBOT_APIKEY` opcional.

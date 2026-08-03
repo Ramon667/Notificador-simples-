@@ -1,0 +1,57 @@
+{
+  "course_groups": [
+    {
+      "name": "Técnico em Enfermagem",
+      "terms": [
+        "técnico em enfermagem",
+        "tecnico em enfermagem",
+        "enfermagem",
+        "curso técnico de enfermagem",
+        "técnico de enfermagem",
+        "formação técnica em enfermagem",
+        "habilitação técnica em enfermagem",
+        "enfermagem flexível",
+        "técnico em enfermagem flexível"
+      ]
+    },
+    {
+      "name": "Administrador de Redes e cursos de Redes",
+      "terms": [
+        "administrador de redes",
+        "administração de redes",
+        "administracao de redes",
+        "redes de computadores",
+        "técnico em redes de computadores",
+        "tecnico em redes de computadores",
+        "infraestrutura de redes",
+        "suporte de redes",
+        "manutenção de redes",
+        "manutencao de redes",
+        "implantação de redes",
+        "implantacao de redes",
+        "cabeamento estruturado",
+        "configuração de redes",
+        "configuracao de redes",
+        "gestão de redes",
+        "gestao de redes",
+        "segurança de redes",
+        "seguranca de redes",
+        "redes sem fio",
+        "wireless",
+        "networking"
+      ]
+    }
+  ],
+  "matching": {
+    "fuzzy_threshold": 0.84,
+    "require_whole_term": false
+  },
+  "notifications": {
+    "ntfy_enabled": true,
+    "whatsapp_enabled": true
+  },
+  "dashboard": {
+    "enabled": true,
+    "title": "Monitor SENAC PI"
+  }
+}
