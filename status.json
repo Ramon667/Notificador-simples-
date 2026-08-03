@@ -1,0 +1,14 @@
+{
+  "started_at": null,
+  "finished_at": null,
+  "success": null,
+  "keyword": "enfermagem",
+  "pdfs_found": 0,
+  "new_pdfs": 0,
+  "matches": 0,
+  "ntfy_sent": 0,
+  "whatsapp_sent": 0,
+  "analysis_failures": 0,
+  "pending_notifications": 0,
+  "last_error": null
+}
