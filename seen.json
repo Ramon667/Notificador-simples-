@@ -58,5 +58,15 @@
     "used_ocr": false,
     "processed_at_utc": "2026-08-03T18:37:38+00:00",
     "processed_at_local": "2026-08-03T15:37:38-03:00"
+  },
+  "https://psg.pi.senac.br/media/pdf/vaga/EDITAL_PSG_N%C2%BA_006_2026_Visto_CJUR_-_assinado_Presidente.pdf": {
+    "title": "EDITAL PROGRAMA SENAC DE GRATUIDADE Nº 006-2026 – PSG",
+    "matched": false,
+    "matched_groups": [],
+    "ntfy_sent": false,
+    "whatsapp_sent": false,
+    "used_ocr": false,
+    "processed_at_utc": "2026-09-05T17:10:39+00:00",
+    "processed_at_local": "2026-09-05T14:10:39-03:00"
   }
 }
