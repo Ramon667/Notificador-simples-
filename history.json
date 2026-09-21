@@ -30,5 +30,15 @@
     "matched_groups": [],
     "ntfy_sent": false,
     "whatsapp_sent": false
+  },
+  {
+    "detected_at_utc": "2026-09-21T20:57:10+00:00",
+    "detected_at_local": "2026-09-21T17:57:10-03:00",
+    "title": "COMUNICADO Nº 02 DE ALTERAÇÃO NO EDITAL Nº 006-2026 – PSG",
+    "url": "https://psg.pi.senac.br/media/pdf/vaga/COMUNICADO_N02_DE_ALTERACAO_NO_EDITAL_N006-2026.pdf",
+    "matched": false,
+    "matched_groups": [],
+    "ntfy_sent": false,
+    "whatsapp_sent": false
   }
 ]
