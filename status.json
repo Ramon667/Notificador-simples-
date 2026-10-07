@@ -1,16 +1,16 @@
 {
-  "started_at_utc": "2026-10-07T07:06:19+00:00",
-  "started_at_local": "2026-10-07T04:06:19-03:00",
+  "started_at_utc": "2026-10-07T14:26:29+00:00",
+  "started_at_local": "2026-10-07T11:26:29-03:00",
   "timezone": "America/Fortaleza",
-  "finished_at_utc": "2026-10-07T07:06:22+00:00",
-  "finished_at_local": "2026-10-07T04:06:22-03:00",
-  "success": true,
-  "pdfs_found": 5,
+  "finished_at_utc": "2026-10-07T14:26:35+00:00",
+  "finished_at_local": "2026-10-07T11:26:35-03:00",
+  "success": false,
+  "pdfs_found": 0,
   "new_pdfs": 0,
   "matches": 0,
   "ntfy_sent": 0,
   "whatsapp_sent": 0,
   "analysis_failures": 0,
   "pending_notifications": 0,
-  "last_error": null
+  "last_error": "HTTPError: 502 Server Error: Bad Gateway for url: https://psg.pi.senac.br/vagas/"
 }
