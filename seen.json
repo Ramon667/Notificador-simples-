@@ -108,5 +108,15 @@
     "used_ocr": false,
     "processed_at_utc": "2026-10-02T21:15:57+00:00",
     "processed_at_local": "2026-10-02T18:15:57-03:00"
+  },
+  "https://psg.pi.senac.br/media/pdf/vaga/COMUNICADO_N%C2%BA_05_DE_ALTERA%C3%87%C3%83O_NO_EDITAL_N%C2%BA_006-2026_.pdf": {
+    "title": "COMUNICADO Nº 05 DE ALTERAÇÃO NO EDITAL Nº 006-2026 – PSG",
+    "matched": false,
+    "matched_groups": [],
+    "ntfy_sent": false,
+    "whatsapp_sent": false,
+    "used_ocr": false,
+    "processed_at_utc": "2026-10-13T17:05:39+00:00",
+    "processed_at_local": "2026-10-13T14:05:39-03:00"
   }
 }
