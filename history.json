@@ -70,5 +70,15 @@
     "matched_groups": [],
     "ntfy_sent": false,
     "whatsapp_sent": false
+  },
+  {
+    "detected_at_utc": "2026-10-16T14:10:02+00:00",
+    "detected_at_local": "2026-10-16T11:10:02-03:00",
+    "title": "EDITAL PROGRAMA SENAC DE GRATUIDADE Nº 007-2026 – PSG",
+    "url": "https://psg.pi.senac.br/media/pdf/vaga/EDITAL1.PDF",
+    "matched": false,
+    "matched_groups": [],
+    "ntfy_sent": false,
+    "whatsapp_sent": false
   }
 ]
