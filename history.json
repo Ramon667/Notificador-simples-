@@ -90,5 +90,15 @@
     "matched_groups": [],
     "ntfy_sent": false,
     "whatsapp_sent": false
+  },
+  {
+    "detected_at_utc": "2026-10-28T14:23:16+00:00",
+    "detected_at_local": "2026-10-28T11:23:16-03:00",
+    "title": "EDITAL PSG Nº 008 2026 Pedro II MÓVEL",
+    "url": "https://psg.pi.senac.br/media/pdf/vaga/EDITAL_PSG_N%C2%BA_008_2026_Pedro_II_Visto_CJUR_-_assinado_Presidente.pdf",
+    "matched": false,
+    "matched_groups": [],
+    "ntfy_sent": false,
+    "whatsapp_sent": false
   }
 ]
