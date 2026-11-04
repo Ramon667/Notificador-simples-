@@ -1,9 +1,9 @@
 {
-  "started_at_utc": "2026-11-04T03:09:02+00:00",
-  "started_at_local": "2026-11-04T00:09:02-03:00",
+  "started_at_utc": "2026-11-04T11:28:28+00:00",
+  "started_at_local": "2026-11-04T08:28:28-03:00",
   "timezone": "America/Fortaleza",
-  "finished_at_utc": "2026-11-04T03:09:04+00:00",
-  "finished_at_local": "2026-11-04T00:09:04-03:00",
+  "finished_at_utc": "2026-11-04T11:28:30+00:00",
+  "finished_at_local": "2026-11-04T08:28:30-03:00",
   "success": true,
   "pdfs_found": 9,
   "new_pdfs": 0,
