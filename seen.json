@@ -148,5 +148,15 @@
     "used_ocr": false,
     "processed_at_utc": "2026-10-28T14:23:16+00:00",
     "processed_at_local": "2026-10-28T11:23:16-03:00"
+  },
+  "https://psg.pi.senac.br/media/pdf/vaga/COMUNICADO_DE_CANCELAMENTO_01_NO_EDITAL_N%C2%BA_008-2026_-Pedro_II.pdf": {
+    "title": "COMUNICADO DE CANCELAMENTO  01 NO EDITAL Nº 008-2026 -Pedro II",
+    "matched": false,
+    "matched_groups": [],
+    "ntfy_sent": false,
+    "whatsapp_sent": false,
+    "used_ocr": false,
+    "processed_at_utc": "2026-11-09T19:59:51+00:00",
+    "processed_at_local": "2026-11-09T16:59:51-03:00"
   }
 }
