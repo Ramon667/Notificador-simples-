@@ -110,5 +110,15 @@
     "matched_groups": [],
     "ntfy_sent": false,
     "whatsapp_sent": false
+  },
+  {
+    "detected_at_utc": "2026-11-19T17:16:48+00:00",
+    "detected_at_local": "2026-11-19T14:16:48-03:00",
+    "title": "COMUNICADO  DE CANCELAMENTO 02 NO EDITAL Nº 008-2026 -Pedro II",
+    "url": "https://psg.pi.senac.br/media/pdf/vaga/COMUNICADO__DE_CANCELAMENTO_02_NO_EDITAL_N%C2%BA_008-2026_-Pedro_II.pdf",
+    "matched": false,
+    "matched_groups": [],
+    "ntfy_sent": false,
+    "whatsapp_sent": false
   }
 ]
